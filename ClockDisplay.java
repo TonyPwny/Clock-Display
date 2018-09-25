@@ -18,7 +18,9 @@ public class ClockDisplay
 {
     private NumberDisplay hours;
     private NumberDisplay minutes;
+    private boolean beforeMidday;
     private String displayString;    // simulates the actual display
+    private String meridiem;
     
     /**
      * Constructor for ClockDisplay objects. This constructor 
@@ -26,8 +28,9 @@ public class ClockDisplay
      */
     public ClockDisplay()
     {
-        hours = new NumberDisplay(24);
+        hours = new NumberDisplay(12);
         minutes = new NumberDisplay(60);
+        setMeridiem(beforeMidday = true);
         updateDisplay();
     }
 
@@ -36,11 +39,12 @@ public class ClockDisplay
      * creates a new clock set at the time specified by the 
      * parameters.
      */
-    public ClockDisplay(int hour, int minute)
+    public ClockDisplay(int hour, int minute, boolean beforeMidday)
     {
-        hours = new NumberDisplay(24);
+        hours = new NumberDisplay(12);
         minutes = new NumberDisplay(60);
-        setTime(hour, minute);
+        this.beforeMidday = beforeMidday;
+        setTime(hour, minute, beforeMidday);
     }
 
     /**
@@ -50,9 +54,18 @@ public class ClockDisplay
     public void timeTick()
     {
         minutes.increment();
+        
         if(minutes.getValue() == 0) {  // it just rolled over!
             hours.increment();
         }
+        
+        if(hours.getValue() == 0 && minutes.getValue() == 0) // flip AM/PM
+        {
+            
+            beforeMidday = !beforeMidday;
+            setMeridiem(beforeMidday);
+        }
+        
         updateDisplay();
     }
 
@@ -60,10 +73,13 @@ public class ClockDisplay
      * Set the time of the display to the specified hour and
      * minute.
      */
-    public void setTime(int hour, int minute)
+    public void setTime(int hour, int minute, boolean beforeMidday)
     {
         hours.setValue(hour);
         minutes.setValue(minute);
+        
+        setMeridiem(beforeMidday);
+        
         updateDisplay();
     }
 
@@ -75,12 +91,43 @@ public class ClockDisplay
         return displayString;
     }
     
+    private void setMeridiem(boolean beforeMidday)
+    {
+        
+        if(beforeMidday)
+        {
+            
+            meridiem = " AM";
+        }
+        else
+        {
+            
+            meridiem = " PM";
+        }
+    }
+    
+    private String getMeridiem()
+    {
+        
+        return meridiem;
+    }
+    
     /**
      * Update the internal string that represents the display.
      */
     private void updateDisplay()
     {
-        displayString = hours.getDisplayValue() + ":" + 
-                        minutes.getDisplayValue();
+        if(hours.getValue() == 0)
+        {
+            
+            displayString = "12:" + 
+                           minutes.getDisplayValue() + getMeridiem();
+        }
+        else
+        {
+            
+            displayString = hours.getDisplayValue() + ":" + 
+                           minutes.getDisplayValue() + getMeridiem();
+        }
     }
 }
