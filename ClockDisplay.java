@@ -5,7 +5,7 @@
  * range of the clock is 12:00am (midnight) to 11:59pm (one minute before 
  * midnight).
  * 
- * The clock maintains the hour time internally as values from 1-12.
+ * The clock maintains the hour time internally as values from 1-12, not 0-23.
  * 
  * The clock display receives "ticks" (via the timeTick method) every minute
  * and reacts by incrementing the display. This is done in the usual clock
