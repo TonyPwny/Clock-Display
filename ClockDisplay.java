@@ -18,13 +18,15 @@ public class ClockDisplay
 {
     private NumberDisplay hours;
     private NumberDisplay minutes;
-    private boolean beforeMidday;
+    private boolean beforeMidday;    // added field for true = AM, false = PM
     private String displayString;    // simulates the actual display
-    private String meridiem;
+    private String meridiem;         // added String field to store AM/PM indicator
     
     /**
      * Constructor for ClockDisplay objects. This constructor 
-     * creates a new clock set at 00:00.
+     * creates a new clock set at 00:00, where updateDisplay() now displays
+     * 12 instead of 00 hours, looping at 12 instead of 24.  It sets
+     * beforeMidday as true before passing it to the setMeridiem method.
      */
     public ClockDisplay()
     {
@@ -38,6 +40,8 @@ public class ClockDisplay
      * Constructor for ClockDisplay objects. This constructor
      * creates a new clock set at the time specified by the 
      * parameters.
+     * setTime now also takes into account the appropriate meridiem
+     * by using the beforeMidday boolean.
      */
     public ClockDisplay(int hour, int minute, boolean beforeMidday)
     {
@@ -59,7 +63,8 @@ public class ClockDisplay
             hours.increment();
         }
         
-        if(hours.getValue() == 0 && minutes.getValue() == 0) // flip AM/PM
+        // New conditional to check when to flip AM/PM indicator
+        if(hours.getValue() == 0 && minutes.getValue() == 0)
         {
             
             beforeMidday = !beforeMidday;
@@ -72,6 +77,7 @@ public class ClockDisplay
     /**
      * Set the time of the display to the specified hour and
      * minute.
+     * Added boolean beforeMidday and the setMeridiem method that uses it.
      */
     public void setTime(int hour, int minute, boolean beforeMidday)
     {
@@ -91,6 +97,9 @@ public class ClockDisplay
         return displayString;
     }
     
+    /**
+     * Method which modifies the String meridiem accordingly.
+     */
     private void setMeridiem(boolean beforeMidday)
     {
         
@@ -106,6 +115,9 @@ public class ClockDisplay
         }
     }
     
+    /**
+     * Method which returns the String meridiem, the AM/PM indicator.
+     */
     private String getMeridiem()
     {
         
@@ -114,9 +126,11 @@ public class ClockDisplay
     
     /**
      * Update the internal string that represents the display.
+     * Modified to show 12-hour formatting with AM/PM indicator.
      */
     private void updateDisplay()
     {
+        // New conditional to accomodate 12-hour formatting
         if(hours.getValue() == 0)
         {
             
