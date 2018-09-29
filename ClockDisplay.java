@@ -126,7 +126,7 @@ public class ClockDisplay
             return "12:" + minutes.getDisplayValue() + getMeridiem();
         }
         else {
-            return getTime() + getMeridiem();
+            return hours.getValue() + ":" + minutes.getDisplayValue() + getMeridiem();
         }
     }
 
