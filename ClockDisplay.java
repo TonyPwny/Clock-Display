@@ -80,7 +80,7 @@ public class ClockDisplay
     }
     
     /**
-     * Return the current time of this display in the 12H format HH:MM XM.
+     * Return the current time of this display in 12 hour format with meridiem.
      */
     public String get24HourInternalDisplay()
     {
@@ -89,15 +89,11 @@ public class ClockDisplay
         }
         
         else if(hours.getValue() < 12) {
-            return getTime() + " AM";
+            return hours.getValue() + ":" + minutes.getDisplayValue() + " AM";
         }
         
         else if(hours.getValue() == 12) {
             return getTime() + " PM";
-        }
-        
-        else if(hours.getValue() > 12 && hours.getValue() < 22){
-            return "0" + hours.getValue() % 12 + ":" + minutes.getDisplayValue() + " PM";
         }
         
         else {
