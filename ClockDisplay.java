@@ -1,43 +1,49 @@
 
 /**
  * The ClockDisplay class implements a digital clock display for a
- * European-style 24 hour clock. The clock shows hours and minutes. The 
- * range of the clock is 00:00 (midnight) to 23:59 (one minute before 
+ * 12 hour clock. The clock shows hours and minutes and an indicator for AM/PM. The 
+ * range of the clock is 12:00am (midnight) to 11:59pm (one minute before 
  * midnight).
+ * 
+ * The clock maintains the hour time internally as values from 1-12, not 0-23.
  * 
  * The clock display receives "ticks" (via the timeTick method) every minute
  * and reacts by incrementing the display. This is done in the usual clock
  * fashion: the hour increments when the minutes roll over to zero.
  * 
- * @author Michael Kölling and David J. Barnes
- * @version 2011.07.31
+ * @author Anthony Tiongson
+ * @version 2018.09.22
  */
 public class ClockDisplay
 {
     private NumberDisplay hours;
     private NumberDisplay minutes;
+    private boolean beforeMidday;    // added field for true = AM, false = PM
     private String displayString;    // simulates the actual display
+    private String meridiem;         // added String field to store AM/PM indicator
     
     /**
      * Constructor for ClockDisplay objects. This constructor 
-     * creates a new clock set at 00:00.
+     * creates a new clock set at 00:00.  Added default meridiem AM.
      */
     public ClockDisplay()
     {
-        hours = new NumberDisplay(24);
+        hours = new NumberDisplay(12);
         minutes = new NumberDisplay(60);
+        setMeridiem(beforeMidday = true);
         updateDisplay();
     }
 
     /**
      * Constructor for ClockDisplay objects. This constructor
      * creates a new clock set at the time specified by the 
-     * parameters.
+     * parameters.  Added a boolean input to signify meridiem.
      */
-    public ClockDisplay(int hour, int minute)
+    public ClockDisplay(int hour, int minute, boolean beforeMidday)
     {
-        hours = new NumberDisplay(24);
+        hours = new NumberDisplay(12);
         minutes = new NumberDisplay(60);
+        setMeridiem(this.beforeMidday = beforeMidday);
         setTime(hour, minute);
     }
 
@@ -48,12 +54,40 @@ public class ClockDisplay
     public void timeTick()
     {
         minutes.increment();
+        
         if(minutes.getValue() == 0) {  // it just rolled over!
             hours.increment();
         }
+        
+        if(minutes.getValue() == 0 && hours.getValue() == 0) { // AM/PM flipper
+            beforeMidday = !beforeMidday;
+            setMeridiem(beforeMidday);
+        }
+        
         updateDisplay();
     }
 
+    /**
+     * Set the meridiem String.
+     */
+    public void setMeridiem(boolean beforeMidday)
+    {
+        if(beforeMidday = true){
+            meridiem = " AM";
+        }
+        else {
+            meridiem = " PM";
+        }
+    }
+    
+    /**
+     * Return the current meridiem of this display.
+     */
+    public String getMeridiem()
+    {
+        return meridiem;
+    }
+    
     /**
      * Set the time of the display to the specified hour and
      * minute.
