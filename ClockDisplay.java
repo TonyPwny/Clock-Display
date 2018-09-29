@@ -12,7 +12,7 @@
  * fashion: the hour increments when the minutes roll over to zero.
  * 
  * @author Anthony Tiongson
- * @version 2018.09.22
+ * @version 2018.09.28
  */
 public class ClockDisplay
 {
@@ -43,8 +43,7 @@ public class ClockDisplay
     {
         hours = new NumberDisplay(12);
         minutes = new NumberDisplay(60);
-        setMeridiem(this.beforeMidday = beforeMidday);
-        setTime(hour, minute);
+        setTime(hour, minute, this.beforeMidday = beforeMidday);
     }
 
     /**
@@ -60,8 +59,7 @@ public class ClockDisplay
         }
         
         if(minutes.getValue() == 0 && hours.getValue() == 0) { // AM/PM flipper
-            beforeMidday = !beforeMidday;
-            setMeridiem(beforeMidday);
+            setMeridiem(beforeMidday = !beforeMidday);
         }
         
         updateDisplay();
@@ -70,9 +68,9 @@ public class ClockDisplay
     /**
      * Set the meridiem String.
      */
-    public void setMeridiem(boolean beforeMidday)
+    private void setMeridiem(boolean beforeMidday)
     {
-        if(beforeMidday = true){
+        if(beforeMidday){
             meridiem = " AM";
         }
         else {
@@ -83,19 +81,20 @@ public class ClockDisplay
     /**
      * Return the current meridiem of this display.
      */
-    public String getMeridiem()
+    private String getMeridiem()
     {
         return meridiem;
     }
     
     /**
      * Set the time of the display to the specified hour and
-     * minute.
+     * minute. Modified it to take in a value to signify AM/PM.
      */
-    public void setTime(int hour, int minute)
+    public void setTime(int hour, int minute, boolean beforeMidday)
     {
         hours.setValue(hour);
         minutes.setValue(minute);
+        setMeridiem(this.beforeMidday = beforeMidday);
         updateDisplay();
     }
 
@@ -115,4 +114,18 @@ public class ClockDisplay
         displayString = hours.getDisplayValue() + ":" + 
                         minutes.getDisplayValue();
     }
+    
+    /**
+     * Return the current time of this display in the 12H format HH:MM XM
+     */
+    public String get12HourInternalDisplay()
+    {
+        if(hours.getValue() == 0) {
+            return "12:" + minutes.getDisplayValue() + getMeridiem();
+        }
+        else {
+            return getTime() + getMeridiem();
+        }
+    }
+
 }
