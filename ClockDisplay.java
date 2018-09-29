@@ -9,7 +9,12 @@
  * and reacts by incrementing the display. This is done in the usual clock
  * fashion: the hour increments when the minutes roll over to zero.
  * 
- * @author Anthony 
+ * A method has been added to implement the ability to view the time in
+ * 12 hour format between 12:00 AM (midnight) to 11:59 PM (one minute
+ * before midnight).
+ * 
+ * @author Anthony Tiongson
+ * @version 2018.09.29
  * original @author Michael Kölling and David J. Barnes
  * original @version 2011.07.31
  */
@@ -65,13 +70,39 @@ public class ClockDisplay
         minutes.setValue(minute);
         updateDisplay();
     }
-
+    
     /**
      * Return the current time of this display in the format HH:MM.
      */
     public String getTime()
     {
         return displayString;
+    }
+    
+    /**
+     * Return the current time of this display in the 12H format HH:MM XM.
+     */
+    public String get24HourInternalDisplay()
+    {
+        if(hours.getValue() == 0) {
+            return "12:" + minutes.getDisplayValue() + " AM";
+        }
+        
+        else if(hours.getValue() < 12) {
+            return getTime() + " AM";
+        }
+        
+        else if(hours.getValue() == 12) {
+            return getTime() + " PM";
+        }
+        
+        else if(hours.getValue() > 12 && hours.getValue() < 22){
+            return "0" + hours.getValue() % 12 + ":" + minutes.getDisplayValue() + " PM";
+        }
+        
+        else {
+            return hours.getValue() % 12 + ":" + minutes.getDisplayValue() + " PM";
+        }
     }
     
     /**
