@@ -13,6 +13,8 @@
  * 
  * @author Anthony Tiongson
  * @version 2018.09.28
+ * original @author Michael Kölling and David J. Barnes
+ * original @version 2011.07.31
  */
 public class ClockDisplay
 {
